@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
             </div>
           </div>
         `,
-        replyTo: email,
+        reply_to: email,
       });
     } else {
       // Option 2: Log to console in dev (replace with your email service)
