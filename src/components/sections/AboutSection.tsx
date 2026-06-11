@@ -44,7 +44,7 @@ export default function AboutSection() {
           {/* Story */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={fd(0.15)} className="space-y-5">
             <p className="text-base text-stone leading-relaxed">
-              I'm a passionate <span className="text-ink font-semibold">Full Stack Developer</span> from India,
+              I&apos;m a passionate <span className="text-ink font-semibold">Full Stack Developer</span> from India,
               building production-grade applications while pursuing my degree. My journey started with curiosity
               about how websites work and evolved into a deep love for crafting intelligent digital experiences.
             </p>

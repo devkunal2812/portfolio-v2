@@ -130,7 +130,7 @@ export default function ContactSection() {
                   : status === 'error' ? (<><AlertCircle size={15} />Try Again</>)
                   : (<><Send size={15} />Send Message</>)}
                 </button>
-                {status === 'sent' && <p className="text-center text-sm text-green-600">Thanks! I'll get back to you within 24 hours.</p>}
+                {status === 'sent' && <p className="text-center text-sm text-green-600">Thanks! I&apos;ll get back to you within 24 hours.</p>}
               </form>
             </div>
           </motion.div>

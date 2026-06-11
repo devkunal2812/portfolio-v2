@@ -68,7 +68,7 @@ export default function ProjectsSection() {
           <div className="section-label mb-3">Projects</div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <h2 className="display-heading text-4xl md:text-6xl">
-              Things I've<br /><span className="text-orange-DEFAULT">Built</span>
+              Things I&apos;ve<br /><span className="text-orange-DEFAULT">Built</span>
             </h2>
             <p className="text-stone max-w-xs text-sm leading-relaxed">Real projects solving real problems — AI, full-stack, and developer tooling.</p>
           </div>

@@ -53,7 +53,7 @@ export default function Footer() {
 
           {/* CTA */}
           <div>
-            <h4 className="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-4">Let's Work</h4>
+            <h4 className="font-mono text-[10px] text-white/30 uppercase tracking-widest mb-4">Let&apos;s Work</h4>
             <p className="text-sm text-white/50 mb-5 leading-relaxed">Open for internships, full-time roles, and freelance projects.</p>
             <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-DEFAULT hover:bg-orange-light text-white rounded-lg text-sm font-medium transition-colors">
