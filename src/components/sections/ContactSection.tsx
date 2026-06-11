@@ -38,7 +38,7 @@ export default function ContactSection() {
         <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={fd(0)} className="mb-16">
           <div className="section-label mb-3">Get In Touch</div>
           <h2 className="display-heading text-4xl md:text-6xl">
-            Let's Build<br /><span className="text-orange-DEFAULT">Together</span>
+            Let&apos;s Build<br /><span className="text-orange-DEFAULT">Together</span>
           </h2>
           <p className="text-stone mt-4 max-w-lg">Whether you have a project, job opportunity, or just want to connect — I typically respond within 24 hours.</p>
         </motion.div>

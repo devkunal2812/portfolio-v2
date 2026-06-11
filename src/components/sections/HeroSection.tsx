@@ -94,7 +94,7 @@ export default function HeroSection() {
               View Projects →
             </button>
             <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="btn-outline">
-              Let's Talk
+              Let&apos;s Talk
             </button>
             <a href="/resume.pdf" download className="btn-outline">
               <Download size={14} /> Resume
