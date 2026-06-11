@@ -1,278 +1,147 @@
 'use client';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Github, Linkedin, Twitter, ArrowDown, Download } from 'lucide-react';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Twitter, Code2, Sparkles } from 'lucide-react';
-import dynamic from 'next/dynamic';
-
-const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), { ssr: false });
-
-const roles = [
-  'Full Stack Developer',
-  'React & Next.js Expert',
-  'AI Integration Specialist',
-  'Node.js Engineer',
-  'Open Source Contributor',
-];
+const roles = ['Full Stack Developer', 'React & Next.js Expert', 'AI Integration Engineer', 'Open Source Contributor'];
 
 export default function HeroSection() {
-  const [currentRole, setCurrentRole] = useState(0);
-  const [displayText, setDisplayText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [current, setCurrent] = useState(0);
+  const [text, setText] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 100, damping: 30 });
-  const springY = useSpring(mouseY, { stiffness: 100, damping: 30 });
-  const rotateX = useTransform(springY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(springX, [-300, 300], [-5, 5]);
-
-  // Typewriter effect
   useEffect(() => {
-    const text = roles[currentRole];
-    let timeout: ReturnType<typeof setTimeout>;
-
-    if (!isDeleting && displayText === text) {
-      timeout = setTimeout(() => setIsDeleting(true), 2000);
-    } else if (isDeleting && displayText === '') {
-      setIsDeleting(false);
-      setCurrentRole((prev) => (prev + 1) % roles.length);
-    } else {
-      const speed = isDeleting ? 40 : 80;
-      timeout = setTimeout(() => {
-        setDisplayText(isDeleting
-          ? text.slice(0, displayText.length - 1)
-          : text.slice(0, displayText.length + 1)
-        );
-      }, speed);
-    }
-    return () => clearTimeout(timeout);
-  }, [displayText, isDeleting, currentRole]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set(e.clientX - rect.left - rect.width / 2);
-    mouseY.set(e.clientY - rect.top - rect.height / 2);
-  };
-
-  const scrollToNext = () => {
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-  };
+    const str = roles[current];
+    let t: ReturnType<typeof setTimeout>;
+    if (!deleting && text === str) { t = setTimeout(() => setDeleting(true), 2200); }
+    else if (deleting && text === '') { setDeleting(false); setCurrent((p) => (p + 1) % roles.length); }
+    else { t = setTimeout(() => setText(deleting ? str.slice(0, text.length - 1) : str.slice(0, text.length + 1)), deleting ? 35 : 75); }
+    return () => clearTimeout(t);
+  }, [text, deleting, current]);
 
   return (
-    <section
-      ref={sectionRef}
-      id="hero"
-      onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex items-center overflow-hidden grid-bg"
-    >
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-void via-void/80 to-void z-10 pointer-events-none" />
+    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden dot-grid">
 
-      {/* Grid fade */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-void/40 to-void z-10 pointer-events-none" />
+      {/* Floating 3D blobs — orange, warm, reference-matching */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Large orange blob top-right */}
+        <motion.div animate={{ y: [0, -20, 0], rotate: [0, 8, 0] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute -top-16 -right-16 w-72 h-72 bg-orange-DEFAULT blob opacity-90" />
+        {/* Small orange ball */}
+        <motion.div animate={{ y: [0, -14, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+          className="absolute top-32 right-64 w-10 h-10 rounded-full bg-orange-DEFAULT" />
+        {/* Cream/stone bottom-left blob */}
+        <motion.div animate={{ y: [0, 16, 0], rotate: [0, -6, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          className="absolute -bottom-20 -left-20 w-80 h-80 bg-orange-muted blob opacity-60" />
+        {/* Small stone ball */}
+        <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="absolute bottom-48 left-64 w-8 h-8 rounded-full bg-stone-light opacity-70" />
+        {/* Squiggle-like ring */}
+        <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-1/2 right-24 w-20 h-20 rounded-full border-4 border-orange-DEFAULT opacity-30" />
+        <motion.div animate={{ rotate: [360, 0] }} transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-1/3 right-40 w-12 h-12 rounded-full border-[3px] border-orange-muted opacity-40" />
+      </div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-6 w-full pt-24 pb-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left — Text */}
-          <motion.div
-            style={{ rotateX, rotateY }}
-            className="space-y-8"
-          >
-            {/* Status badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-accent-cyan/20"
-            >
-              <div className="w-2 h-2 rounded-full bg-accent-emerald animate-pulse" />
-              <span className="font-mono text-xs text-text-secondary">
-                Available for opportunities
-              </span>
-            </motion.div>
+      {/* Fade overlay for dot grid at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-cream to-transparent pointer-events-none" />
 
-            {/* Main headline */}
-            <div className="space-y-3">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <span className="font-mono text-sm text-accent-cyan tracking-widest uppercase">
-                  &gt; Hello, World! I&apos;m
-                </span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05]"
-              >
-                <span className="block text-text-primary">Kunal</span>
-                <span className="block gradient-text">Builds.</span>
-              </motion.h1>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex items-center gap-2 text-xl md:text-2xl font-display text-text-secondary"
-              >
-                <span className="text-accent-cyan">&lt;</span>
-                <span className="min-w-[280px]">
-                  {displayText}
-                  <span className="text-accent-cyan animate-cursor-blink">|</span>
-                </span>
-                <span className="text-accent-cyan">/&gt;</span>
-              </motion.div>
-            </div>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="text-base md:text-lg text-text-secondary leading-relaxed max-w-lg"
-            >
-              Building{' '}
-              <span className="text-accent-cyan font-medium">intelligent digital experiences</span>{' '}
-              with React, Next.js, Node.js, and AI. Turning complex problems into elegant solutions
-              that scale.
-            </motion.p>
-
-            {/* Tech stack pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-wrap gap-2"
-            >
-              {['React', 'Next.js', 'Node.js', 'TypeScript', 'MongoDB', 'AI/ML'].map((tech) => (
-                <span key={tech} className="tech-badge">{tech}</span>
-              ))}
-            </motion.div>
-
-            {/* CTA buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              className="flex flex-wrap gap-4"
-            >
-              <motion.button
-                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-primary group"
-              >
-                <Code2 size={16} />
-                View Projects
-                <motion.span
-                  animate={{ x: [0, 4, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >→</motion.span>
-              </motion.button>
-              <motion.button
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-cyber"
-              >
-                <Sparkles size={14} />
-                Contact Me
-              </motion.button>
-            </motion.div>
-
-            {/* Social links */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.1 }}
-              className="flex items-center gap-4"
-            >
-              {[
-                { icon: Github, href: 'https://github.com/devkunal2812', label: 'GitHub' },
-                { icon: Linkedin, href: 'https://linkedin.com/in/devkunal', label: 'LinkedIn' },
-                { icon: Twitter, href: 'https://twitter.com/devkunal', label: 'Twitter' },
-              ].map(({ icon: Icon, href, label }) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  whileHover={{ scale: 1.1, color: '#00d4ff' }}
-                  className="p-2 text-text-muted hover:text-accent-cyan transition-colors"
-                >
-                  <Icon size={20} />
-                </motion.a>
-              ))}
-              <div className="w-px h-5 bg-border" />
-              <span className="font-mono text-xs text-text-muted">@devkunal2812</span>
-            </motion.div>
+      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full pt-28 pb-16">
+        <div className="max-w-3xl">
+          {/* Status */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="inline-flex items-center gap-2 mb-8 px-3.5 py-1.5 bg-white border border-black/8 rounded-full shadow-card">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="font-mono text-[11px] text-stone">Available for opportunities</span>
           </motion.div>
 
-          {/* Right — 3D Scene */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="relative h-[500px] lg:h-[600px]"
-          >
-            <HeroScene />
-
-            {/* Floating stat cards */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2 }}
-              className="absolute top-8 -left-4 glass-card rounded-xl p-4 border border-accent-cyan/20"
-            >
-              <div className="font-display font-bold text-2xl text-accent-cyan">15+</div>
-              <div className="font-mono text-xs text-text-muted mt-1">Projects Built</div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.4 }}
-              className="absolute bottom-16 -right-4 glass-card rounded-xl p-4 border border-accent-violet/20"
-            >
-              <div className="font-display font-bold text-2xl text-accent-violet">5+</div>
-              <div className="font-mono text-xs text-text-muted mt-1">Hackathons</div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.6 }}
-              className="absolute bottom-40 -left-8 glass-card rounded-xl p-4 border border-accent-emerald/20"
-            >
-              <div className="font-display font-bold text-2xl text-accent-emerald">2+</div>
-              <div className="font-mono text-xs text-text-muted mt-1">Years Exp.</div>
-            </motion.div>
+          {/* Main heading — big, editorial */}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}>
+            <h1 className="display-heading text-6xl md:text-8xl lg:text-9xl mb-4">
+              KUNAL<br />
+              <span className="text-orange-DEFAULT">BUILDS.</span>
+            </h1>
           </motion.div>
+
+          {/* Typewriter role */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+            className="flex items-center gap-2 mb-6">
+            <span className="font-mono text-xs text-stone">›</span>
+            <span className="font-heading text-lg md:text-xl text-stone font-medium min-w-[300px]">
+              {text}<span className="text-orange-DEFAULT animate-cursor-blink">|</span>
+            </span>
+          </motion.div>
+
+          {/* Description */}
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}
+            className="text-base md:text-lg text-stone leading-relaxed max-w-xl mb-8">
+            I craft <span className="text-ink font-semibold">intelligent digital experiences</span> using React, Next.js, Node.js, and AI —
+            turning complex problems into clean, scalable solutions.
+          </motion.p>
+
+          {/* Tech pills */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }}
+            className="flex flex-wrap gap-2 mb-10">
+            {['React', 'Next.js', 'Node.js', 'TypeScript', 'MongoDB', 'AI/ML'].map((t) => (
+              <span key={t} className="tech-badge">{t}</span>
+            ))}
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85 }}
+            className="flex flex-wrap gap-3 mb-12">
+            <button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} className="btn-primary">
+              View Projects →
+            </button>
+            <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="btn-outline">
+              Let's Talk
+            </button>
+            <a href="/resume.pdf" download className="btn-outline">
+              <Download size={14} /> Resume
+            </a>
+          </motion.div>
+
+          {/* Socials */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+            className="flex items-center gap-4">
+            {[
+              { icon: Github, href: 'https://github.com/devkunal2812', label: 'GitHub' },
+              { icon: Linkedin, href: 'https://linkedin.com/in/devkunal', label: 'LinkedIn' },
+              { icon: Twitter, href: 'https://twitter.com/devkunal', label: 'Twitter' },
+            ].map(({ icon: Icon, href, label }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                className="w-9 h-9 bg-white border border-black/8 rounded-lg flex items-center justify-center text-stone hover:text-orange-DEFAULT hover:border-orange-DEFAULT/30 transition-all shadow-card">
+                <Icon size={15} />
+              </a>
+            ))}
+            <div className="w-px h-5 bg-black/10" />
+            <span className="font-mono text-xs text-stone">@devkunal2812</span>
+          </motion.div>
+        </div>
+
+        {/* Floating stats — top right on desktop */}
+        <div className="hidden lg:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col gap-4">
+          {[
+            { val: '15+', label: 'Projects' },
+            { val: '5+', label: 'Hackathons' },
+            { val: '2+', label: 'Yrs Exp' },
+          ].map(({ val, label }) => (
+            <motion.div key={label} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }}
+              className="card px-5 py-4 text-center">
+              <div className="font-heading font-bold text-2xl text-orange-DEFAULT">{val}</div>
+              <div className="font-mono text-[10px] text-stone mt-0.5">{label}</div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.button
-        onClick={scrollToNext}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-text-muted hover:text-accent-cyan transition-colors"
-      >
-        <span className="font-mono text-xs tracking-widest uppercase">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-        >
-          <ArrowDown size={16} />
+      {/* Scroll hint */}
+      <motion.button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-stone hover:text-orange-DEFAULT transition-colors">
+        <span className="font-mono text-[10px] tracking-widest uppercase">Scroll</span>
+        <motion.div animate={{ y: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+          <ArrowDown size={14} />
         </motion.div>
       </motion.button>
     </section>

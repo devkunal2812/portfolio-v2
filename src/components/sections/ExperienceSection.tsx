@@ -1,79 +1,50 @@
 'use client';
-
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Briefcase, Calendar, MapPin, ExternalLink } from 'lucide-react';
 
 const experiences = [
   {
-    role: 'Freelance Full Stack Developer',
-    company: 'Self-Employed',
-    companyUrl: 'https://kunalbuilds.me',
-    period: 'Jan 2024 – Present',
-    duration: '1+ year',
-    location: 'Remote',
-    type: 'Freelance',
-    color: '#00d4ff',
-    description:
-      'Delivering full-stack web solutions for clients across India and internationally. Projects include SaaS dashboards, e-commerce platforms, and AI-powered tools.',
-    achievements: [
+    role: 'Freelance Full Stack Developer', company: 'Self-Employed', url: 'https://kunalbuilds.me',
+    period: 'Jan 2024 – Present', location: 'Remote', type: 'Freelance',
+    desc: 'Delivering full-stack web solutions for clients across India and internationally — SaaS dashboards, e-commerce platforms, and AI-powered tools.',
+    points: [
       'Built and deployed 5+ production applications for clients',
-      'Integrated AI capabilities using OpenAI and LangChain',
-      'Reduced client\'s page load time by 60% through Next.js optimization',
+      'Integrated AI capabilities using OpenAI API and LangChain',
+      'Reduced client page load time by 60% through Next.js optimization',
       'Maintained 100% client satisfaction rating',
     ],
     tech: ['Next.js', 'Node.js', 'MongoDB', 'Supabase', 'OpenAI API'],
   },
   {
-    role: 'Open Source Contributor',
-    company: 'Various Projects',
-    companyUrl: 'https://github.com/devkunal2812',
-    period: 'Jun 2023 – Present',
-    duration: '1.5+ years',
-    location: 'Remote',
-    type: 'Open Source',
-    color: '#10b981',
-    description:
-      'Contributing bug fixes, features, and documentation to open-source projects. Active contributor to React and Node.js ecosystem libraries.',
-    achievements: [
+    role: 'Open Source Contributor', company: 'Various Projects', url: 'https://github.com/devkunal2812',
+    period: 'Jun 2023 – Present', location: 'Remote', type: 'Open Source',
+    desc: 'Contributing bug fixes, features, and documentation to open-source projects in the React and Node.js ecosystem.',
+    points: [
       '10+ merged pull requests across different repositories',
       'Fixed critical authentication vulnerability in a popular NPM package',
       'Added TypeScript types to a widely-used utility library',
-      'Maintained personal open-source projects with 100+ GitHub stars',
+      '100+ GitHub stars across personal projects',
     ],
     tech: ['JavaScript', 'TypeScript', 'React', 'Node.js'],
   },
   {
-    role: 'Technical Lead — Smart India Hackathon',
-    company: 'College Team',
-    companyUrl: '#',
-    period: 'Sep 2023 – Dec 2023',
-    duration: '3 months',
-    location: 'Onsite',
-    type: 'Hackathon',
-    color: '#f59e0b',
-    description:
-      'Led a 5-person team to build an AI-powered attendance and analytics system for educational institutions. Won at the college level, advanced to state round.',
-    achievements: [
-      'Architected the full-stack system in under 24 hours',
-      'Led technical decisions for AI/ML integration',
+    role: 'Technical Lead — Smart India Hackathon', company: 'College Team', url: '#',
+    period: 'Sep – Dec 2023', location: 'Onsite', type: 'Hackathon',
+    desc: 'Led a 5-person team building an AI attendance & analytics system for educational institutions. Won college level, advanced to state round.',
+    points: [
+      'Architected full-stack system in under 24 hours',
+      'Led all technical decisions for AI/ML integration',
       'Presented to a panel of 15+ industry judges',
       'Advanced to national round of Smart India Hackathon',
     ],
     tech: ['Python', 'FastAPI', 'React', 'OpenCV', 'PostgreSQL'],
   },
   {
-    role: 'Web Development Intern',
-    company: 'Local Startup',
-    companyUrl: '#',
-    period: 'May 2023 – Aug 2023',
-    duration: '4 months',
-    location: 'Hybrid',
-    type: 'Internship',
-    color: '#7c3aed',
-    description:
-      'Worked on frontend and backend development for a logistics startup. Contributed to the main dashboard, implemented REST APIs, and improved database query performance.',
-    achievements: [
+    role: 'Web Development Intern', company: 'Local Startup', url: '#',
+    period: 'May – Aug 2023', location: 'Hybrid', type: 'Internship',
+    desc: 'Frontend and backend development for a logistics startup — main dashboard, REST APIs, and database query performance improvements.',
+    points: [
       'Reduced API response time by 40% through query optimization',
       'Implemented real-time tracking with Socket.io',
       'Built reusable component library used across 3 products',
@@ -83,118 +54,76 @@ const experiences = [
   },
 ];
 
-const typeColors: Record<string, string> = {
-  Freelance: '#00d4ff',
-  'Open Source': '#10b981',
-  Hackathon: '#f59e0b',
-  Internship: '#7c3aed',
+const typeColor: Record<string, string> = {
+  Freelance: '#D4500A', 'Open Source': '#059669', Hackathon: '#d97706', Internship: '#7c3aed',
 };
 
+const fd = (d: number) => ({ duration: 0.7, delay: d, ease: [0.16, 1, 0.3, 1] as [number,number,number,number] });
+
 export default function ExperienceSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="experience" ref={sectionRef} className="relative py-32 overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent-amber/30 to-transparent" />
+    <section id="experience" ref={ref} className="relative py-28 bg-cream overflow-hidden">
+      <div className="absolute top-0 right-0 w-52 h-52 bg-orange-pale blob opacity-60 pointer-events-none translate-x-1/4 -translate-y-1/4" />
 
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="mb-20"
-        >
-          <div className="section-label mb-4">Experience</div>
-          <h2 className="font-display font-bold text-4xl md:text-5xl text-text-primary">
-            My{' '}
-            <span className="gradient-text">Professional Path</span>
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={fd(0)} className="mb-16">
+          <div className="section-label mb-3">Experience</div>
+          <h2 className="display-heading text-4xl md:text-6xl">
+            My Professional<br /><span className="text-orange-DEFAULT">Path</span>
           </h2>
         </motion.div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical line */}
-          <div className="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-accent-cyan/50 via-accent-violet/50 to-transparent" />
+        <div className="relative pl-6 border-l-2 border-black/8 space-y-8">
+          {experiences.map((exp, i) => (
+            <motion.article key={i}
+              initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={fd(0.15 + i * 0.12)}
+              className="relative">
+              {/* Timeline dot */}
+              <div className="absolute -left-[29px] top-6 w-3.5 h-3.5 rounded-full border-2 bg-white"
+                style={{ borderColor: typeColor[exp.type] }} />
 
-          <div className="space-y-8 pl-12 md:pl-20">
-            {experiences.map((exp, i) => (
-              <motion.article
-                key={i}
-                initial={{ opacity: 0, x: -30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.2 + i * 0.15, duration: 0.7 }}
-                className="relative group"
-              >
-                {/* Timeline dot */}
-                <div
-                  className="absolute -left-12 md:-left-[52px] top-6 w-4 h-4 rounded-full border-2 bg-void transition-all duration-300 group-hover:scale-125"
-                  style={{ borderColor: exp.color, boxShadow: `0 0 15px ${exp.color}60` }}
-                />
-
-                <div className="glass-card-hover rounded-2xl p-6 md:p-8">
-                  {/* Header row */}
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span
-                          className="text-xs font-mono px-2 py-0.5 rounded-full border"
-                          style={{ color: typeColors[exp.type], borderColor: `${typeColors[exp.type]}40`, background: `${typeColors[exp.type]}10` }}
-                        >
-                          {exp.type}
-                        </span>
-                      </div>
-                      <h3 className="font-display font-bold text-xl text-text-primary">{exp.role}</h3>
-                      <a
-                        href={exp.companyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm mt-1 transition-colors"
-                        style={{ color: exp.color }}
-                      >
-                        <Briefcase size={13} />
-                        {exp.company}
-                        <ExternalLink size={11} />
-                      </a>
-                    </div>
-                    <div className="flex flex-col gap-1 text-xs text-text-muted shrink-0">
-                      <span className="flex items-center gap-1.5">
-                        <Calendar size={12} />
-                        {exp.period}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <MapPin size={12} />
-                        {exp.location}
+              <div className="card p-6 md:p-7 hover:shadow-card-hover transition-all">
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono border"
+                        style={{ color: typeColor[exp.type], borderColor: `${typeColor[exp.type]}30`, background: `${typeColor[exp.type]}10` }}>
+                        {exp.type}
                       </span>
                     </div>
+                    <h3 className="font-heading font-bold text-xl text-ink">{exp.role}</h3>
+                    <a href={exp.url} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm mt-1 hover:underline"
+                      style={{ color: typeColor[exp.type] }}>
+                      <Briefcase size={12} />{exp.company}<ExternalLink size={10} />
+                    </a>
                   </div>
-
-                  {/* Description */}
-                  <p className="text-sm text-text-secondary leading-relaxed mb-5">{exp.description}</p>
-
-                  {/* Achievements */}
-                  <ul className="space-y-2 mb-5">
-                    {exp.achievements.map((a, ai) => (
-                      <li key={ai} className="flex items-start gap-2.5 text-sm text-text-secondary">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: exp.color }} />
-                        {a}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Tech */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {exp.tech.map((t) => (
-                      <span key={t} className="tech-badge text-[10px]" style={{ color: exp.color, borderColor: `${exp.color}25` }}>
-                        {t}
-                      </span>
-                    ))}
+                  <div className="flex flex-col gap-1 text-xs text-stone shrink-0">
+                    <span className="flex items-center gap-1.5"><Calendar size={11} />{exp.period}</span>
+                    <span className="flex items-center gap-1.5"><MapPin size={11} />{exp.location}</span>
                   </div>
                 </div>
-              </motion.article>
-            ))}
-          </div>
+
+                <p className="text-sm text-stone leading-relaxed mb-4">{exp.desc}</p>
+
+                <ul className="space-y-1.5 mb-5">
+                  {exp.points.map((pt, pi) => (
+                    <li key={pi} className="flex items-start gap-2.5 text-sm text-stone">
+                      <span className="w-1 h-1 rounded-full mt-2 shrink-0 bg-orange-DEFAULT" />
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {exp.tech.map((t) => <span key={t} className="tech-badge">{t}</span>)}
+                </div>
+              </div>
+            </motion.article>
+          ))}
         </div>
       </div>
     </section>

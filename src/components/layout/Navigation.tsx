@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Download } from 'lucide-react';
@@ -21,157 +20,90 @@ export default function Navigation() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-
-      // Scroll spy
-      const sections = navItems.map((item) => item.href.slice(1));
-      for (const id of sections.reverse()) {
+      setScrolled(window.scrollY > 40);
+      const sections = navItems.map((i) => i.href.slice(1));
+      for (const id of [...sections].reverse()) {
         const el = document.getElementById(id);
-        if (el && window.scrollY >= el.offsetTop - 200) {
-          setActiveSection(id);
-          break;
-        }
+        if (el && window.scrollY >= el.offsetTop - 200) { setActiveSection(id); break; }
       }
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollTo = useCallback((href: string) => {
-    const id = href.slice(1);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(href.slice(1))?.scrollIntoView({ behavior: 'smooth' });
     setMobileOpen(false);
   }, []);
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
-          scrolled
-            ? 'py-3 glass-card border-b border-white/5'
-            : 'py-6'
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-400',
+          scrolled ? 'py-3 bg-cream/90 backdrop-blur-md border-b border-black/6' : 'py-5 bg-transparent'
         )}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <motion.a
-            href="#"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            className="flex items-center gap-3 group"
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="relative w-9 h-9">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00d4ff] to-[#7c3aed] rounded-lg opacity-80" />
-              <div className="absolute inset-[1px] bg-void rounded-lg flex items-center justify-center">
-                <span className="font-display font-bold text-sm gradient-text">K</span>
-              </div>
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 bg-ink rounded-lg flex items-center justify-center group-hover:bg-orange-DEFAULT transition-colors duration-300">
+              <span className="font-heading font-bold text-sm text-cream">K</span>
             </div>
-            <div>
-              <div className="font-display font-bold text-sm text-text-primary leading-none">Kunal</div>
-              <div className="font-mono text-[10px] text-accent-cyan leading-none mt-0.5">Full Stack Dev</div>
-            </div>
-          </motion.a>
+            <span className="font-heading font-bold text-ink text-sm tracking-tight">kunalbuilds</span>
+          </a>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => scrollTo(item.href)}
+              <button key={item.href} onClick={() => scrollTo(item.href)}
                 className={cn(
-                  'relative px-4 py-2 font-sans text-sm transition-all duration-300 rounded-lg',
+                  'relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
                   activeSection === item.href.slice(1)
-                    ? 'text-accent-cyan'
-                    : 'text-text-secondary hover:text-text-primary'
-                )}
-              >
-                {activeSection === item.href.slice(1) && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute inset-0 bg-accent-cyan/10 rounded-lg border border-accent-cyan/20"
-                  />
-                )}
-                <span className="relative z-10">{item.label}</span>
+                    ? 'text-orange-DEFAULT bg-orange-pale'
+                    : 'text-stone hover:text-ink hover:bg-black/4'
+                )}>
+                {item.label}
               </button>
             ))}
           </div>
 
-          {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
-            <motion.a
-              href="/resume.pdf"
-              download
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-accent-cyan border border-accent-cyan/30 rounded-lg hover:border-accent-cyan/60 hover:bg-accent-cyan/5 transition-all duration-300"
-            >
-              <Download size={14} />
-              Resume
-            </motion.a>
-            <motion.button
-              onClick={() => scrollTo('#contact')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-primary text-sm py-2 px-5"
-            >
-              Hire Me
-            </motion.button>
+          <div className="hidden md:flex items-center gap-2.5">
+            <a href="/resume.pdf" download
+              className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-stone hover:text-ink border border-black/10 hover:border-black/20 rounded-lg transition-all">
+              <Download size={13} /> Resume
+            </a>
+            <button onClick={() => scrollTo('#contact')} className="btn-primary py-2 px-5 text-sm">
+              Hire Me →
+            </button>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-text-secondary hover:text-text-primary transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 text-stone hover:text-ink">
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </motion.nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-[70px] left-0 right-0 z-40 glass-card border-b border-white/5 py-6"
-          >
-            <div className="max-w-7xl mx-auto px-6 flex flex-col gap-2">
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+            className="fixed top-[60px] left-0 right-0 z-40 bg-cream/95 backdrop-blur-md border-b border-black/6 py-4">
+            <div className="max-w-6xl mx-auto px-6 flex flex-col gap-1">
               {navItems.map((item, i) => (
-                <motion.button
-                  key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                <motion.button key={item.href}
+                  initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}
                   onClick={() => scrollTo(item.href)}
-                  className="text-left py-3 px-4 text-sm font-medium text-text-secondary hover:text-accent-cyan hover:bg-accent-cyan/5 rounded-lg transition-all duration-200"
-                >
+                  className="text-left py-2.5 px-3 text-sm font-medium text-stone hover:text-orange-DEFAULT hover:bg-orange-pale rounded-lg transition-all">
                   {item.label}
                 </motion.button>
               ))}
-              <div className="flex gap-3 mt-4 pt-4 border-t border-white/5">
-                <a
-                  href="/resume.pdf"
-                  download
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-accent-cyan border border-accent-cyan/30 rounded-lg"
-                >
-                  <Download size={14} />
-                  Resume
-                </a>
-                <button
-                  onClick={() => scrollTo('#contact')}
-                  className="btn-primary text-sm py-2 px-5 flex-1 justify-center"
-                >
-                  Hire Me
-                </button>
+              <div className="flex gap-2 mt-3 pt-3 border-t border-black/6">
+                <a href="/resume.pdf" download className="btn-outline text-sm py-2 px-4">Resume</a>
+                <button onClick={() => scrollTo('#contact')} className="btn-primary text-sm py-2 flex-1 justify-center">Hire Me</button>
               </div>
             </div>
           </motion.div>

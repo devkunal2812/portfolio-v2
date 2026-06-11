@@ -1,185 +1,87 @@
 'use client';
-
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Trophy, Award, Code2, Star, Users, Zap } from 'lucide-react';
+import { Trophy, Award, Code2, Users } from 'lucide-react';
 
-const achievements = [
+const groups = [
   {
-    category: 'Hackathons',
-    icon: Trophy,
-    color: '#f59e0b',
+    cat: 'Hackathons', Icon: Trophy,
     items: [
-      {
-        title: 'Smart India Hackathon 2023',
-        subtitle: 'College Winner → State Round',
-        description: 'Built AI-powered attendance system. Led 5-person team to college-level victory.',
-        badge: '🏆 Winner',
-      },
-      {
-        title: 'HackFest 2024',
-        subtitle: 'Top 10 Finalists',
-        description: 'Real-time collaborative tool with WebRTC. Competed against 200+ teams.',
-        badge: '🥉 Top 10',
-      },
-      {
-        title: 'Code for Good 2023',
-        subtitle: 'Runner Up',
-        description: 'Built a social impact platform connecting NGOs with volunteers.',
-        badge: '🥈 Runner Up',
-      },
-      {
-        title: 'Internal Hackathon',
-        subtitle: '1st Place',
-        description: 'E-learning platform with AI tutor capabilities for college students.',
-        badge: '🥇 1st Place',
-      },
+      { title: 'Smart India Hackathon 2023', sub: 'College Winner → State Round', badge: '🏆 Winner', desc: 'Led 5-person team to build AI attendance system in 24 hours.' },
+      { title: 'HackFest 2024', sub: 'Top 10 Finalists', badge: '🥉 Top 10', desc: 'Real-time collaborative tool with WebRTC. 200+ competing teams.' },
+      { title: 'Code for Good 2023', sub: 'Runner Up', badge: '🥈 Runner Up', desc: 'Social impact platform connecting NGOs with volunteers.' },
+      { title: 'Internal Hackathon', sub: '1st Place', badge: '🥇 1st Place', desc: 'AI-powered e-learning platform for college students.' },
     ],
   },
   {
-    category: 'Certifications',
-    icon: Award,
-    color: '#00d4ff',
+    cat: 'Certifications', Icon: Award,
     items: [
-      {
-        title: 'Meta Frontend Developer',
-        subtitle: 'Meta / Coursera',
-        description: 'Professional certification covering React, JavaScript, and UX design.',
-        badge: '✅ Verified',
-      },
-      {
-        title: 'MongoDB Developer Path',
-        subtitle: 'MongoDB University',
-        description: 'Comprehensive MongoDB certification covering aggregations, indexing, and Atlas.',
-        badge: '✅ Certified',
-      },
-      {
-        title: 'AWS Cloud Practitioner',
-        subtitle: 'Amazon Web Services',
-        description: 'Foundational AWS certification covering cloud concepts and core services.',
-        badge: '✅ Certified',
-      },
+      { title: 'Meta Frontend Developer', sub: 'Meta / Coursera', badge: '✅ Verified', desc: 'Professional cert covering React, JS, and UX design.' },
+      { title: 'MongoDB Developer Path', sub: 'MongoDB University', badge: '✅ Certified', desc: 'Aggregations, indexing, Atlas — comprehensive MongoDB cert.' },
+      { title: 'AWS Cloud Practitioner', sub: 'Amazon Web Services', badge: '✅ Certified', desc: 'Foundational AWS certification covering core cloud services.' },
     ],
   },
   {
-    category: 'Open Source',
-    icon: Code2,
-    color: '#10b981',
+    cat: 'Open Source', Icon: Code2,
     items: [
-      {
-        title: '10+ Merged PRs',
-        subtitle: 'Multiple Repositories',
-        description: 'Bug fixes, features, and documentation contributions to popular open-source projects.',
-        badge: '📦 Contributor',
-      },
-      {
-        title: 'GitHub Stars',
-        subtitle: '100+ across projects',
-        description: 'Personal projects and tools that developers find useful and bookmark.',
-        badge: '⭐ 100+ Stars',
-      },
-      {
-        title: 'Hacktoberfest 2023',
-        subtitle: 'Completed',
-        description: 'Completed Hacktoberfest challenge with 4+ quality contributions.',
-        badge: '🎃 Completed',
-      },
+      { title: '10+ Merged PRs', sub: 'Multiple Repos', badge: '📦 Contributor', desc: 'Bug fixes, features, and docs across popular open-source projects.' },
+      { title: '100+ GitHub Stars', sub: 'Personal Projects', badge: '⭐ 100+ Stars', desc: 'Developer tools and templates that people actually use.' },
+      { title: 'Hacktoberfest 2023', sub: 'Completed', badge: '🎃 Done', desc: '4+ quality contributions completing the Hacktoberfest challenge.' },
     ],
   },
   {
-    category: 'Community',
-    icon: Users,
-    color: '#7c3aed',
+    cat: 'Community', Icon: Users,
     items: [
-      {
-        title: 'Tech Club Lead',
-        subtitle: 'College Developer Community',
-        description: 'Led and organized tech workshops, hackathons, and coding competitions for 200+ students.',
-        badge: '👑 Lead',
-      },
-      {
-        title: 'Workshop Speaker',
-        subtitle: 'React & Next.js',
-        description: 'Conducted multiple workshops on React best practices and modern web development.',
-        badge: '🎤 Speaker',
-      },
+      { title: 'Tech Club Lead', sub: 'College Dev Community', badge: '👑 Lead', desc: 'Organized workshops, hackathons, and competitions for 200+ students.' },
+      { title: 'Workshop Speaker', sub: 'React & Next.js', badge: '🎤 Speaker', desc: 'Conducted workshops on React best practices and modern web dev.' },
     ],
   },
 ];
 
+const fd = (d: number) => ({ duration: 0.7, delay: d, ease: [0.16, 1, 0.3, 1] as [number,number,number,number] });
+
 export default function AchievementsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="achievements" ref={sectionRef} className="relative py-32 overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent-amber/30 to-transparent" />
+    <section id="achievements" ref={ref} className="relative py-28 bg-white overflow-hidden">
+      <div className="absolute bottom-0 right-0 w-60 h-60 bg-orange-pale blob opacity-50 pointer-events-none translate-x-1/4 translate-y-1/4" />
 
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="mb-20"
-        >
-          <div className="section-label mb-4">Achievements</div>
-          <h2 className="font-display font-bold text-4xl md:text-5xl text-text-primary">
-            Milestones &{' '}
-            <span className="gradient-text">Recognition</span>
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={fd(0)} className="mb-16">
+          <div className="section-label mb-3">Achievements</div>
+          <h2 className="display-heading text-4xl md:text-6xl">
+            Milestones &<br /><span className="text-orange-DEFAULT">Recognition</span>
           </h2>
-          <p className="text-text-secondary mt-4 max-w-xl">
-            A track record of competitive wins, certifications, and community impact.
-          </p>
         </motion.div>
 
-        {/* Grid of categories */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {achievements.map((cat, ci) => (
-            <motion.div
-              key={cat.category}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 + ci * 0.1 }}
-              className="glass-card rounded-2xl p-6"
-            >
-              {/* Category header */}
-              <div className="flex items-center gap-3 mb-6">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{ background: `${cat.color}15`, border: `1px solid ${cat.color}30` }}
-                >
-                  <cat.icon size={18} style={{ color: cat.color }} />
+        <div className="grid md:grid-cols-2 gap-6 mb-14">
+          {groups.map((g, gi) => (
+            <motion.div key={g.cat}
+              initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={fd(0.1 + gi * 0.1)}
+              className="card p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-9 h-9 bg-orange-pale rounded-lg flex items-center justify-center">
+                  <g.Icon size={16} className="text-orange-DEFAULT" />
                 </div>
-                <h3 className="font-display font-bold text-text-primary">{cat.category}</h3>
+                <h3 className="font-heading font-bold text-ink">{g.cat}</h3>
               </div>
-
-              {/* Items */}
-              <div className="space-y-4">
-                {cat.items.map((item, ii) => (
-                  <motion.div
-                    key={ii}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.4 + ci * 0.1 + ii * 0.07 }}
-                    className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.02] transition-colors"
-                  >
-                    <div
-                      className="w-1.5 h-1.5 rounded-full mt-2 shrink-0"
-                      style={{ background: cat.color, boxShadow: `0 0 6px ${cat.color}` }}
-                    />
+              <div className="space-y-3">
+                {g.items.map((item, ii) => (
+                  <motion.div key={ii}
+                    initial={{ opacity: 0, x: -10 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={fd(0.25 + gi * 0.1 + ii * 0.07)}
+                    className="flex items-start gap-3 p-3 rounded-xl hover:bg-cream transition-colors">
+                    <span className="w-1.5 h-1.5 rounded-full bg-orange-DEFAULT mt-2 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-0.5">
-                        <span className="font-medium text-sm text-text-primary">{item.title}</span>
-                        <span
-                          className="text-[10px] font-mono px-2 py-0.5 rounded-full whitespace-nowrap shrink-0"
-                          style={{ color: cat.color, background: `${cat.color}10`, border: `1px solid ${cat.color}25` }}
-                        >
+                        <span className="font-medium text-sm text-ink truncate">{item.title}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-pale text-orange-DEFAULT shrink-0 border border-orange-DEFAULT/15">
                           {item.badge}
                         </span>
                       </div>
-                      <div className="text-xs text-accent-cyan mb-1">{item.subtitle}</div>
-                      <p className="text-xs text-text-muted leading-relaxed">{item.description}</p>
+                      <div className="text-xs text-orange-muted mb-0.5">{item.sub}</div>
+                      <p className="text-xs text-stone leading-relaxed">{item.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -188,31 +90,21 @@ export default function AchievementsSection() {
           ))}
         </div>
 
-        {/* Bottom CTA stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1 }}
-          className="mt-12 glass-card rounded-2xl p-8"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        {/* Summary stats bar */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={fd(0.7)}
+          className="card p-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-black/6">
             {[
-              { value: '5+', label: 'Hackathons Participated', icon: Trophy },
-              { value: '3', label: 'Certifications Earned', icon: Award },
-              { value: '10+', label: 'Open Source Contributions', icon: Code2 },
-              { value: '200+', label: 'Students Mentored', icon: Users },
-            ].map(({ value, label, icon: Icon }, i) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 1.2 + i * 0.1 }}
-                className="space-y-2"
-              >
-                <Icon size={20} className="mx-auto text-accent-cyan opacity-60" />
-                <div className="font-display font-bold text-3xl gradient-text-cyan">{value}</div>
-                <div className="font-mono text-xs text-text-muted">{label}</div>
-              </motion.div>
+              { val: '5+', label: 'Hackathons', Icon: Trophy },
+              { val: '3', label: 'Certifications', Icon: Award },
+              { val: '10+', label: 'Open Source PRs', Icon: Code2 },
+              { val: '200+', label: 'Students Mentored', Icon: Users },
+            ].map(({ val, label, Icon }, i) => (
+              <div key={label} className="space-y-2 px-4">
+                <Icon size={18} className="mx-auto text-orange-DEFAULT opacity-70" />
+                <div className="font-heading font-extrabold text-3xl text-ink">{val}</div>
+                <div className="font-mono text-[10px] text-stone">{label}</div>
+              </div>
             ))}
           </div>
         </motion.div>
